@@ -1,32 +1,34 @@
-import React , {useState} from 'react'
+import React  from 'react'
+import { useDispatch , useSelector } from 'react-redux';
+import { getUsers } from './../redux/featchers/usersSlice';
 
 const Users = () => {
-  const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState([])
+  const dispatch = useDispatch()
+  const loading= useSelector(state=>state.users.loading)
+  const users = useSelector((state) => state.users.data);
 
-  const getUsers =async () =>{
-    setLoading(true)
-    const res = await fetch("https://jsonplaceholder.typicode.com/users")
-    const data = await res.json()
-    console.log('====================================');
-    console.log(data);
-    console.log('====================================');
-    setUsers(data)
-    setLoading(false)
-  }
+
   return (
     <div className=" flex flex-col items-center justify-center gap-5">
       <button
-        className="bg-black border-2  border-white hover:text-white duration-300 p-1 shadow-black shadow-sm rounded-lg font-bold text-orange-500"
-        onClick={getUsers}
+        className="bg-black hover:bg-orange-500   hover:text-black duration-100 p-1 rounded-lg font-bold text-orange-500 shadow-sm shadow-black hover:shadow-none"
+        onClick={() => {
+          dispatch(getUsers());
+        }}
         disabled={loading}
       >
         {!loading ? "get users" : "loading ..."}
       </button>
 
-      <ul className="flex flex-col items-center justify-center bg-slate-300 p-5 rounded-lg shadow-black shadow-sm">
+      <ul className="flex flex-col items-center justify-center bg-slate-300 p-5 gap-2 rounded-lg shadow-black shadow-sm">
         {users.map((user) => (
-          <li key={user.id}> {user.name}</li>
+          <li
+            className="bg-black font-bold text-orange-500 w-full text-center p-1 hover:bg-orange-500 hover:text-black  duration-100 cursor-pointer  rounded-lg "
+            key={user.id}
+          >
+            {" "}
+            {user.name}
+          </li>
         ))}
       </ul>
     </div>
